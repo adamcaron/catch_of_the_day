@@ -21,7 +21,6 @@ var base = Rebase.createClass('https://catch-o-the-day.firebaseio.com');
 */
 
 var App = React.createClass({
-
   getInitialState : function() {
     return {
       fishes : {},
@@ -34,6 +33,18 @@ var App = React.createClass({
       context : this,
       state : 'fishes'
     });
+
+    var localStorageRef = localStorage.getItem('order-' + this.props.params.storeId);
+
+    if(localStorageRef) {
+      // update the component state to reflect what is in localStorage
+      this.setState({
+        order : JSON.parse(localStorageRef)
+      })
+    }
+  },
+  componentWillUpdate : function(nextProps, nextState) {
+    localStorage.setItem('order-' + this.props.params.storeId, JSON.stringify(nextState.order));
   },
   addToOrder : function(key) {
     this.state.order[key] = this.state.order[key] + 1 || 1; // update the state object
