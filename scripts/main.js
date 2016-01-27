@@ -9,8 +9,12 @@ var Navigation = ReactRouter.Navigation
 var History = ReactRouter.History
 var createBrowserHistory = require('history/lib/createBrowserHistory'); // Load the required code to use pushState();
 
-// import helper methods
+// Import helper methods
 var h = require('./helpers');
+
+// Firebase
+var Rebase = require('re-base');
+var base = Rebase.createClass('https://catch-o-the-day.firebaseio.com');
 
 /*
   App
@@ -23,6 +27,13 @@ var App = React.createClass({
       fishes : {},
       order : {}
     }
+  },
+  componentDidMount : function() {
+    // sync this app's state with the object in Firebase.
+    base.syncState(this.props.params.storeId + '/fishes', {
+      context : this,
+      state : 'fishes'
+    });
   },
   addToOrder : function(key) {
     this.state.order[key] = this.state.order[key] + 1 || 1; // update the state object
